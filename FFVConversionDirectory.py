@@ -7,7 +7,7 @@ from pathlib import Path
 def convert_compressed_avi(filename_p : Path, preserve_orig : bool = False):
     input_file = filename_p.absolute()
     output_file = filename_p.parent / f"{filename_p.stem}_uncompressed.avi"
-    cmd = f"ffmpeg -i {input_file} -c:v rawvideo -pix_fmt rgb24 {output_file} -y"
+    cmd = f'ffmpeg -i "{input_file}" -c:v rawvideo -pix_fmt rgb24 "{output_file}" -y'
     proc = subprocess.run(cmd, shell=True)
     if proc.returncode != 0:
         print(f"Failed converting {filename_p}. Aborting.")
@@ -19,14 +19,14 @@ def convert_compressed_avi(filename_p : Path, preserve_orig : bool = False):
 def convert_uncompressed_nut(filename_p : Path, preserve_orig : bool = False):
     input_file = filename_p.absolute()
     output_file = filename_p.parent / f"{filename_p.stem}_ffv1.avi"
-    cmd = f"ffmpeg -i {input_file} -c:v ffv1 -pix_fmt bgra {output_file} -y"
+    cmd = f'ffmpeg -i "{input_file}" -c:v ffv1 -pix_fmt bgra "{output_file}" -y'
     proc = subprocess.run(cmd, shell=True)
     if proc.returncode != 0:
         print(f"{filename_p}: Failed step .nut to .avi (ffv1). Aborting.")
         return
     intermediate_input_file = output_file
     output_file = filename_p.parent / f"{filename_p.stem}_uncompressed.avi"
-    cmd = f"ffmpeg -i {intermediate_input_file} -c:v rawvideo -pix_fmt rgb24 {output_file} -y"
+    cmd = f'ffmpeg -i "{intermediate_input_file}" -c:v rawvideo -pix_fmt rgb24 "{output_file}" -y'
     proc = subprocess.run(cmd, shell=True)
     if proc.returncode != 0:
         print(f"<{filename_p}>: Failed step .avi (ffv1) to .avi (uncompressed). Aborting.")
